@@ -36,19 +36,29 @@ const replicatePredictionSchema = z.object({
     .optional(),
 });
 
-const baseUrl = process.env.NANO_BANANA_BASE_URL;
+const rawBaseUrl = process.env.NANO_BANANA_BASE_URL;
 const apiKey = process.env.NANO_BANANA_API_KEY;
 const provider = (process.env.NANO_BANANA_PROVIDER ?? "nanobanana") as Provider;
 const replicateModel = process.env.NANO_BANANA_REPLICATE_MODEL;
 const replicateVersion = process.env.NANO_BANANA_REPLICATE_VERSION;
 
 function getEnv() {
-  if (!baseUrl) {
+  if (!rawBaseUrl) {
     throw new Error("Missing NANO_BANANA_BASE_URL environment variable");
   }
 
   if (!apiKey) {
     throw new Error("Missing NANO_BANANA_API_KEY environment variable");
+  }
+
+  let baseUrl: string;
+
+  try {
+    baseUrl = new URL(rawBaseUrl).toString();
+  } catch (error) {
+    throw new Error(
+      "NANO_BANANA_BASE_URL must be a valid absolute URL (e.g. https://api.nanobanana.com)"
+    );
   }
 
   if (provider !== "nanobanana" && provider !== "replicate") {
@@ -118,12 +128,41 @@ function extractReplicateResult(
 }
 
 export async function generate(payload: GeneratePayload) {
-  const { baseUrl: base, apiKey: key } = getEnv();
-  const response = await fetch(endpoint("/v1/generate", base), {
+  const env = getEnv();
+
+  if (env.provider === "replicate") {
+    const predictionsUrl = endpoint("/v1/predictions", env.baseUrl);
+    const request: Record<string, unknown> = {
+      input: {
+        prompt: payload.prompt,
+        image: payload.referenceImage,
+      },
+    };
+
+    if (env.replicateVersion) {
+      request.version = env.replicateVersion;
+    } else if (env.replicateModel) {
+      request.model = env.replicateModel;
+    }
+
+    const response = await fetch(predictionsUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${env.apiKey}`,
+      },
+      body: JSON.stringify(request),
+    });
+
+    const prediction = await handleResponse(response, replicatePredictionSchema);
+    return generateResponseSchema.parse({ jobId: prediction.id });
+  }
+
+  const response = await fetch(endpoint("/v1/generate", env.baseUrl), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
+      Authorization: `Bearer ${env.apiKey}`,
     },
     body: JSON.stringify(payload),
   });
