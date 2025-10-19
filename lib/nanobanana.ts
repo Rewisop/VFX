@@ -23,27 +23,52 @@ const jobResponseSchema = z.object({
   resultUrl: z.string().url().optional(),
 });
 
+const replicateFileSchema = z
+  .object({
+    url: z.string().url(),
+  })
+  .passthrough();
+
 const replicatePredictionSchema = z.object({
   id: z.string().min(1),
   status: z.string().min(1),
   output: z
     .union([
       z.string(),
-      z.array(z.string()),
+      replicateFileSchema,
+      z.array(z.union([z.string(), replicateFileSchema])),
       z.null(),
       z.undefined(),
     ])
     .optional(),
+  urls: z
+    .object({
+      get: z.string().url().optional(),
+      stream: z.string().url().optional(),
+    })
+    .partial()
+    .optional(),
 });
 
-const baseUrl = process.env.NANO_BANANA_BASE_URL;
-const apiKey = process.env.NANO_BANANA_API_KEY;
-const provider = (process.env.NANO_BANANA_PROVIDER ?? "nanobanana") as Provider;
-const replicateModel = process.env.NANO_BANANA_REPLICATE_MODEL;
-const replicateVersion = process.env.NANO_BANANA_REPLICATE_VERSION;
+const allowedProviders: Provider[] = ["nanobanana", "replicate"];
+
+function isProvider(value: string): value is Provider {
+  return allowedProviders.some((provider) => provider === value);
+}
+
+function normalizeEnvValue(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : undefined;
+}
 
 function getEnv() {
-  if (!baseUrl) {
+  const rawBaseUrl = normalizeEnvValue(process.env.NANO_BANANA_BASE_URL);
+  const apiKey = normalizeEnvValue(process.env.NANO_BANANA_API_KEY);
+  const rawProvider = normalizeEnvValue(process.env.NANO_BANANA_PROVIDER);
+  const replicateModel = normalizeEnvValue(process.env.NANO_BANANA_REPLICATE_MODEL);
+  const replicateVersion = normalizeEnvValue(process.env.NANO_BANANA_REPLICATE_VERSION);
+
+  if (!rawBaseUrl) {
     throw new Error("Missing NANO_BANANA_BASE_URL environment variable");
   }
 
@@ -51,7 +76,19 @@ function getEnv() {
     throw new Error("Missing NANO_BANANA_API_KEY environment variable");
   }
 
-  if (provider !== "nanobanana" && provider !== "replicate") {
+  let baseUrl: string;
+
+  try {
+    baseUrl = new URL(rawBaseUrl).toString();
+  } catch (error) {
+    throw new Error(
+      "NANO_BANANA_BASE_URL must be a valid absolute URL (e.g. https://api.nanobanana.com)"
+    );
+  }
+
+  const provider = (rawProvider ?? "nanobanana").toLowerCase();
+
+  if (!isProvider(provider)) {
     throw new Error(
       "NANO_BANANA_PROVIDER must be either 'nanobanana' or 'replicate'"
     );
@@ -63,7 +100,13 @@ function getEnv() {
     );
   }
 
-  return { baseUrl, apiKey, provider, replicateModel, replicateVersion };
+  return {
+    baseUrl,
+    apiKey,
+    provider,
+    replicateModel,
+    replicateVersion,
+  };
 }
 
 function endpoint(path: string, base: string) {
@@ -99,10 +142,12 @@ function mapReplicateStatus(status: string): JobStatus {
 }
 
 function extractReplicateResult(
-  output: z.infer<typeof replicatePredictionSchema>["output"]
+  data: z.infer<typeof replicatePredictionSchema>
 ): string | undefined {
+  const { output, urls } = data;
+
   if (!output) {
-    return undefined;
+    return urls?.get;
   }
 
   if (typeof output === "string") {
@@ -110,20 +155,61 @@ function extractReplicateResult(
   }
 
   if (Array.isArray(output)) {
-    const firstString = output.find((item): item is string => typeof item === "string");
-    return firstString;
+    for (const item of output) {
+      if (typeof item === "string") {
+        return item;
+      }
+
+      if (item && typeof item === "object" && "url" in item && typeof item.url === "string") {
+        return item.url;
+      }
+    }
+    return urls?.get;
   }
 
-  return undefined;
+  if (typeof output === "object" && "url" in output && typeof output.url === "string") {
+    return output.url;
+  }
+
+  return urls?.get;
 }
 
 export async function generate(payload: GeneratePayload) {
-  const { baseUrl: base, apiKey: key } = getEnv();
-  const response = await fetch(endpoint("/v1/generate", base), {
+  const env = getEnv();
+
+  if (env.provider === "replicate") {
+    const predictionsUrl = endpoint("/v1/predictions", env.baseUrl);
+    const request: Record<string, unknown> = {
+      input: {
+        prompt: payload.prompt,
+        image_input: [payload.referenceImage],
+      },
+    };
+
+    if (env.replicateVersion) {
+      request.version = env.replicateVersion;
+    } else if (env.replicateModel) {
+      request.model = env.replicateModel;
+    }
+
+    const response = await fetch(predictionsUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${env.apiKey}`,
+      },
+      body: JSON.stringify(request),
+    });
+
+    const prediction = await handleResponse(response, replicatePredictionSchema);
+    return generateResponseSchema.parse({ jobId: prediction.id });
+  }
+
+  const response = await fetch(endpoint("/v1/generate", env.baseUrl), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
+      Authorization: `Bearer ${env.apiKey}`,
     },
     body: JSON.stringify(payload),
   });
@@ -149,7 +235,7 @@ export async function getJob(jobId: string) {
     const data = await handleResponse(response, replicatePredictionSchema);
     return jobResponseSchema.parse({
       status: mapReplicateStatus(data.status),
-      resultUrl: extractReplicateResult(data.output),
+      resultUrl: extractReplicateResult(data),
     });
   }
 
