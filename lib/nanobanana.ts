@@ -36,14 +36,25 @@ const replicatePredictionSchema = z.object({
     .optional(),
 });
 
-const baseUrl = process.env.NANO_BANANA_BASE_URL;
-const apiKey = process.env.NANO_BANANA_API_KEY;
-const provider = (process.env.NANO_BANANA_PROVIDER ?? "nanobanana") as Provider;
-const replicateModel = process.env.NANO_BANANA_REPLICATE_MODEL;
-const replicateVersion = process.env.NANO_BANANA_REPLICATE_VERSION;
+const allowedProviders: Provider[] = ["nanobanana", "replicate"];
+
+function isProvider(value: string): value is Provider {
+  return allowedProviders.some((provider) => provider === value);
+}
+
+function normalizeEnvValue(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : undefined;
+}
 
 function getEnv() {
-  if (!baseUrl) {
+  const rawBaseUrl = normalizeEnvValue(process.env.NANO_BANANA_BASE_URL);
+  const apiKey = normalizeEnvValue(process.env.NANO_BANANA_API_KEY);
+  const rawProvider = normalizeEnvValue(process.env.NANO_BANANA_PROVIDER);
+  const replicateModel = normalizeEnvValue(process.env.NANO_BANANA_REPLICATE_MODEL);
+  const replicateVersion = normalizeEnvValue(process.env.NANO_BANANA_REPLICATE_VERSION);
+
+  if (!rawBaseUrl) {
     throw new Error("Missing NANO_BANANA_BASE_URL environment variable");
   }
 
@@ -51,7 +62,19 @@ function getEnv() {
     throw new Error("Missing NANO_BANANA_API_KEY environment variable");
   }
 
-  if (provider !== "nanobanana" && provider !== "replicate") {
+  let baseUrl: string;
+
+  try {
+    baseUrl = new URL(rawBaseUrl).toString();
+  } catch (error) {
+    throw new Error(
+      "NANO_BANANA_BASE_URL must be a valid absolute URL (e.g. https://api.nanobanana.com)"
+    );
+  }
+
+  const provider = (rawProvider ?? "nanobanana").toLowerCase();
+
+  if (!isProvider(provider)) {
     throw new Error(
       "NANO_BANANA_PROVIDER must be either 'nanobanana' or 'replicate'"
     );
@@ -63,7 +86,13 @@ function getEnv() {
     );
   }
 
-  return { baseUrl, apiKey, provider, replicateModel, replicateVersion };
+  return {
+    baseUrl,
+    apiKey,
+    provider,
+    replicateModel,
+    replicateVersion,
+  };
 }
 
 function endpoint(path: string, base: string) {
@@ -118,12 +147,41 @@ function extractReplicateResult(
 }
 
 export async function generate(payload: GeneratePayload) {
-  const { baseUrl: base, apiKey: key } = getEnv();
-  const response = await fetch(endpoint("/v1/generate", base), {
+  const env = getEnv();
+
+  if (env.provider === "replicate") {
+    const predictionsUrl = endpoint("/v1/predictions", env.baseUrl);
+    const request: Record<string, unknown> = {
+      input: {
+        prompt: payload.prompt,
+        image: payload.referenceImage,
+      },
+    };
+
+    if (env.replicateVersion) {
+      request.version = env.replicateVersion;
+    } else if (env.replicateModel) {
+      request.model = env.replicateModel;
+    }
+
+    const response = await fetch(predictionsUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${env.apiKey}`,
+      },
+      body: JSON.stringify(request),
+    });
+
+    const prediction = await handleResponse(response, replicatePredictionSchema);
+    return generateResponseSchema.parse({ jobId: prediction.id });
+  }
+
+  const response = await fetch(endpoint("/v1/generate", env.baseUrl), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
+      Authorization: `Bearer ${env.apiKey}`,
     },
     body: JSON.stringify(payload),
   });
