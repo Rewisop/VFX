@@ -42,11 +42,13 @@ function getEnv() {
   const replicateModel = process.env.NANO_BANANA_REPLICATE_MODEL;
   const replicateVersion = process.env.NANO_BANANA_REPLICATE_VERSION;
 
-  const baseUrl =
+  let baseUrl =
     process.env.NANO_BANANA_BASE_URL ??
     (provider === "replicate"
       ? "https://api.replicate.com/v1/predictions"
       : "https://api.nanobanana.com");
+
+  baseUrl = normalizeBaseUrl(baseUrl, provider);
 
   if (!baseUrl) {
     throw new Error("Missing NANO_BANANA_BASE_URL environment variable");
@@ -69,6 +71,24 @@ function getEnv() {
   }
 
   return { baseUrl, apiKey, provider, replicateModel, replicateVersion };
+}
+
+function normalizeBaseUrl(baseUrl: string, provider: Provider) {
+  if (provider !== "nanobanana") {
+    return baseUrl;
+  }
+
+  try {
+    const parsed = new URL(baseUrl);
+    if (parsed.hostname === "api.nanobanana.dev") {
+      parsed.hostname = "api.nanobanana.com";
+      return parsed.toString();
+    }
+  } catch (error) {
+    return baseUrl;
+  }
+
+  return baseUrl;
 }
 
 function endpoint(path: string, base: string) {
