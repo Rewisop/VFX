@@ -37,7 +37,7 @@ pnpm i zod
 
 Use `.env.local.example` as a template for your local secrets. The app expects:
 
-- `NANO_BANANA_BASE_URL` – Base URL for the NanoBanana or Replicate API.
+- `NANO_BANANA_BASE_URL` – Base URL for the NanoBanana or Replicate API (for Replicate use `https://api.replicate.com` or `https://api.replicate.com/v1/predictions`).
 - `NANO_BANANA_API_KEY` – API key or token used to authorize requests.
 - `NANO_BANANA_PROVIDER` – Optional provider selector (`nanobanana` by default, set to `replicate` when using Replicate-hosted NanoBanana models).
 - `NANO_BANANA_REPLICATE_MODEL` / `NANO_BANANA_REPLICATE_VERSION` – Replicate-specific identifiers required when the provider is `replicate` (supply at least one).
