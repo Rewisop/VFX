@@ -16,7 +16,7 @@ pnpm i zod
 2. Copy the contents of this repository into the generated `curio-vfx` folder (or apply the diff on top of the scaffold) so the custom UI, API routes, and styling are available.
 3. Duplicate `.env.local.example` to `.env.local` and populate the values:
    - Choose your provider with `NANO_BANANA_PROVIDER` (`nanobanana` by default, set to `replicate` for Replicate-hosted models).
-   - Supply `NANO_BANANA_API_KEY`. If you omit `NANO_BANANA_BASE_URL`, the app falls back to `https://api.nanobanana.com` for the NanoBanana API or `https://api.replicate.com/v1/predictions` when the provider is Replicate.
+   - Supply `NANO_BANANA_API_KEY`. If you omit `NANO_BANANA_BASE_URL`, the app falls back to `https://api.nanobananaapi.ai` for the NanoBanana API or `https://api.replicate.com/v1/predictions` when the provider is Replicate.
    - For Replicate, provide either `NANO_BANANA_REPLICATE_MODEL` or `NANO_BANANA_REPLICATE_VERSION`.
    - Optionally list any extra remote image hosts in `NEXT_IMAGE_REMOTE_PATTERNS` (e.g. `replicate.delivery` for Replicate-generated assets).
 4. Install dependencies with `pnpm install`.
@@ -35,7 +35,7 @@ pnpm i zod
 Use `.env.local.example` as a template for your local secrets. The app expects:
 
 - `NANO_BANANA_PROVIDER` – Provider selector (`nanobanana` by default, set to `replicate` when using Replicate-hosted NanoBanana models).
-- `NANO_BANANA_BASE_URL` – Override the API base URL if needed. Defaults to `https://api.nanobanana.com` for the NanoBanana API and `https://api.replicate.com/v1/predictions` for Replicate when unset.
+- `NANO_BANANA_BASE_URL` – Override the API base URL if needed. Defaults to `https://api.nanobananaapi.ai` for the NanoBanana API and `https://api.replicate.com/v1/predictions` for Replicate when unset.
 - `NANO_BANANA_API_KEY` – API key or token used to authorize requests.
 - `NANO_BANANA_REPLICATE_MODEL` / `NANO_BANANA_REPLICATE_VERSION` – Replicate-specific identifiers required when the provider is `replicate` (supply at least one).
 - `NEXT_IMAGE_REMOTE_PATTERNS` – Optional comma-separated list of remote image hosts allowed by Next/Image.
