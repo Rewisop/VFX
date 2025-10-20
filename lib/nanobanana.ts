@@ -46,7 +46,7 @@ function getEnv() {
     process.env.NANO_BANANA_BASE_URL ??
     (provider === "replicate"
       ? "https://api.replicate.com/v1/predictions"
-      : "https://api.nanobanana.com");
+      : "https://api.nanobananaapi.ai");
 
   if (!baseUrl) {
     throw new Error("Missing NANO_BANANA_BASE_URL environment variable");
