@@ -1,5 +1,19 @@
 const rawPatterns = process.env.NEXT_IMAGE_REMOTE_PATTERNS?.split(",") ?? [];
 
+function normalizeNanoBananaUrl(url) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname === "api.nanobanana.dev") {
+      parsed.hostname = "api.nanobanana.com";
+      return parsed.toString();
+    }
+  } catch (error) {
+    return url;
+  }
+
+  return url;
+}
+
 const baseFromEnv = process.env.NANO_BANANA_BASE_URL;
 
 const remotePatterns = rawPatterns
@@ -7,8 +21,9 @@ const remotePatterns = rawPatterns
   .filter(Boolean)
   .map((entry) => {
     const normalized = entry.includes("://") ? entry : `https://${entry}`;
+    const sanitized = normalizeNanoBananaUrl(normalized);
     try {
-      const parsed = new URL(normalized);
+      const parsed = new URL(sanitized);
       return {
         protocol: parsed.protocol.replace(":", ""),
         hostname: parsed.hostname,
@@ -23,7 +38,8 @@ const remotePatterns = rawPatterns
 
 if (!remotePatterns.length && baseFromEnv) {
   try {
-    const parsed = new URL(baseFromEnv);
+    const sanitized = normalizeNanoBananaUrl(baseFromEnv);
+    const parsed = new URL(sanitized);
     remotePatterns.push({
       protocol: parsed.protocol.replace(":", ""),
       hostname: parsed.hostname,
