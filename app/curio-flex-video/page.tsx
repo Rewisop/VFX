@@ -13,13 +13,13 @@ type GenerationResponse = {
 };
 
 const statusMessages: Record<GenerationStatus, string> = {
-  idle: "Ready for your Curio Flex Video concept",
+  idle: "Ready for your AimShreem Flex Video concept",
   running: "Rendering motion cues...",
   succeeded: "Motion test rendered",
-  failed: "The Curio Flex Video muse is silent",
+  failed: "The AimShreem Flex Video muse is silent",
 };
 
-export default function CurioFlexVideoPage() {
+export default function AimShreemFlexVideoPage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [prompt, setPrompt] = useState("");
@@ -35,6 +35,17 @@ export default function CurioFlexVideoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const hasResult = useMemo(() => status === "succeeded" && !!resultUrl, [status, resultUrl]);
+
+  const aspectClass = useMemo(() => {
+    const ratioClassMap: Record<string, string> = {
+      "16:9": "aspect-[16/9]",
+      "9:16": "aspect-[9/16]",
+      "1:1": "aspect-square",
+      "2.39:1": "aspect-[239/100]",
+    };
+
+    return ratioClassMap[aspectRatio] ?? "aspect-[16/9]";
+  }, [aspectRatio]);
 
   const readFileAsDataUrl = (file: File) =>
     new Promise<string>((resolve, reject) => {
@@ -122,7 +133,7 @@ export default function CurioFlexVideoPage() {
       setStatus("succeeded");
     } catch (err) {
       console.error(err);
-      setError("Could not generate with Curio Flex Video. Please retry.");
+      setError("Could not generate with AimShreem Flex Video. Please retry.");
       setStatus("failed");
     } finally {
       setIsSubmitting(false);
@@ -139,7 +150,7 @@ export default function CurioFlexVideoPage() {
       if (resultMimeType === "video/mp4") return "mp4";
       return "video";
     })();
-    link.download = `curio-flex-video.${extension}`;
+    link.download = `aimshreem-flex-video.${extension}`;
     link.click();
   }, [hasResult, resultUrl, resultMimeType]);
 
@@ -157,23 +168,23 @@ export default function CurioFlexVideoPage() {
   }, []);
 
   return (
-    <main className="relative mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-4 pb-20 pt-16">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-none flex-col gap-12 px-6 pb-24 pt-20 sm:px-10 lg:px-16">
       <div className="absolute inset-0 -z-10 opacity-70">
         <Particles className="h-full w-full" />
       </div>
 
       <header className="flex flex-col gap-4 text-center sm:gap-6">
-        <p className="text-sm uppercase tracking-[0.4em] text-orange-200/70">Curio Flex Video Story Lab</p>
+        <p className="text-sm uppercase tracking-[0.4em] text-orange-200/70">AimShreem Flex Video Story Lab</p>
         <h1 className="text-4xl font-semibold tracking-tight text-orange-50 sm:text-5xl md:text-6xl">
           Animate your concept
         </h1>
         <p className="mx-auto max-w-2xl text-lg text-orange-100/80">
-          Feed Curio Flex Video a reference frame and narrative brief to conjure motion-first concept art, tailored for your
+          Feed AimShreem Flex Video a reference frame and narrative brief to conjure motion-first concept art, tailored for your
           next shot.
         </p>
       </header>
 
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+      <section className="grid gap-10 lg:grid-cols-[minmax(24rem,32rem)_minmax(0,1fr)] xl:grid-cols-[minmax(26rem,34rem)_minmax(0,1fr)]">
         <div className="glow-card flex flex-col gap-6 p-6 sm:p-8">
           <div
             onDragOver={(event) => event.preventDefault()}
@@ -237,7 +248,7 @@ export default function CurioFlexVideoPage() {
             <textarea
               value={storyboard}
               onChange={(event) => setStoryboard(event.target.value)}
-              placeholder="Break down key beats, dialogue, or camera moves to guide Curio Flex Video."
+              placeholder="Break down key beats, dialogue, or camera moves to guide AimShreem Flex Video."
               className="input-field min-h-[120px] resize-none"
             />
           </div>
@@ -312,7 +323,7 @@ export default function CurioFlexVideoPage() {
           <div className="relative z-10 flex h-full flex-col gap-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-orange-200/70">Curio Flex Video Preview</p>
+                <p className="text-sm uppercase tracking-[0.3em] text-orange-200/70">AimShreem Flex Video Preview</p>
                 <p className="text-xs uppercase tracking-[0.4em] text-orange-200/50">
                   {shotDuration}s &bull; {aspectRatio} frame
                 </p>
@@ -324,7 +335,7 @@ export default function CurioFlexVideoPage() {
                 </div>
               )}
             </div>
-            <div className="relative flex-1 overflow-hidden rounded-3xl border border-orange-200/20 bg-slate-950/60 shadow-neon">
+            <div className={`relative w-full overflow-hidden rounded-3xl border border-orange-200/20 bg-slate-950/60 shadow-neon ${aspectClass}`}>
               {resultUrl ? (
                 <video
                   key={resultUrl}
@@ -346,9 +357,9 @@ export default function CurioFlexVideoPage() {
                 />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center text-orange-100/70">
-                  <p className="text-lg font-semibold">Seed Curio Flex Video with imagery + narrative</p>
+                  <p className="text-lg font-semibold">Seed AimShreem Flex Video with imagery + narrative</p>
                   <p className="max-w-xs text-sm text-orange-100/60">
-                    Upload a frame or concept art, then map the sequence beats to preview how Curio Flex Video might choreograph
+                    Upload a frame or concept art, then map the sequence beats to preview how AimShreem Flex Video might choreograph
                     the shot.
                   </p>
                 </div>
@@ -358,7 +369,7 @@ export default function CurioFlexVideoPage() {
             <div className="rounded-3xl border border-orange-500/10 bg-slate-900/70 p-5 text-sm text-orange-100/70">
               <p className="font-semibold uppercase tracking-[0.3em] text-orange-200/70">Brief Summary</p>
               <p className="mt-2 text-orange-100/80">
-                {prompt ? prompt : "Add a prompt to outline the motion you want Curio Flex Video to explore."}
+                {prompt ? prompt : "Add a prompt to outline the motion you want AimShreem Flex Video to explore."}
               </p>
               {storyboard && (
                 <p className="mt-3 text-xs uppercase tracking-[0.3em] text-orange-200/60">Storyboard Beats</p>

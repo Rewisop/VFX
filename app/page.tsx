@@ -105,7 +105,7 @@ export default function Page() {
       setStatus("succeeded");
     } catch (err) {
       console.error(err);
-      setError("Could not generate with Curio Flex. Please retry.");
+      setError("Could not generate with AimShreem Flex. Please retry.");
       setStatus("failed");
     } finally {
       setIsSubmitting(false);
@@ -118,7 +118,7 @@ export default function Page() {
     try {
       const link = document.createElement("a");
       link.href = resultUrl;
-      link.download = "curio-flex-image.png";
+      link.download = "aimshreem-flex-image.png";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -141,21 +141,21 @@ export default function Page() {
   }, []);
 
   return (
-    <main className="relative mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-4 pb-20 pt-16">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-none flex-col gap-12 px-6 pb-24 pt-20 sm:px-10 lg:px-16">
       <div className="absolute inset-0 -z-10 opacity-70">
         <Particles className="h-full w-full" />
       </div>
       <header className="flex flex-col gap-4 text-center sm:gap-6">
-        <p className="text-sm uppercase tracking-[0.4em] text-orange-200/70">Curio Flex Image Studio</p>
+        <p className="text-sm uppercase tracking-[0.4em] text-orange-200/70">AimShreem Flex Image Studio</p>
         <h1 className="text-4xl font-semibold tracking-tight text-orange-50 sm:text-5xl md:text-6xl">
-          Curio Flex
+          AimShreem Flex
         </h1>
         <p className="mx-auto max-w-2xl text-lg text-orange-100/80">
-          Drop in a reference frame, riff a prompt, and let Curio Flex remix it into neon-drenched composites.
+          Drop in a reference frame, riff a prompt, and let AimShreem Flex remix it into neon-drenched composites.
         </p>
       </header>
 
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+      <section className="grid gap-10 lg:grid-cols-[minmax(22rem,28rem)_minmax(0,1fr)] xl:grid-cols-[minmax(24rem,30rem)_minmax(0,1fr)]">
         <div className="glow-card flex flex-col gap-6 p-6 sm:p-8">
           <div
             onDragOver={(event) => event.preventDefault()}
@@ -240,7 +240,7 @@ export default function Page() {
               <p className="text-sm uppercase tracking-[0.3em] text-orange-200/70">Live Preview</p>
               {status === "running" && <FunkyLoading />}
             </div>
-            <div className="relative flex-1 overflow-hidden rounded-3xl border border-orange-200/20 bg-slate-950/60 shadow-neon">
+            <div className="relative w-full overflow-hidden rounded-3xl border border-orange-200/20 bg-slate-950/60 shadow-neon aspect-[16/9]">
               {resultUrl ? (
                 <NextImage
                   src={resultUrl}

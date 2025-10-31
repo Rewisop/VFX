@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error("Curio Flex generate error", error);
-    return NextResponse.json({ error: "Failed to generate Curio Flex image" }, { status: 502 });
+    console.error("AimShreem Flex generate error", error);
+    return NextResponse.json({ error: "Failed to generate AimShreem Flex image" }, { status: 502 });
   }
 }

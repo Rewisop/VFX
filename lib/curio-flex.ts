@@ -62,7 +62,7 @@ export async function generateImage(payload: GeneratePayload) {
     .find((part) => part.inlineData?.data);
 
   if (!imagePart?.inlineData?.data) {
-    throw new Error("Curio Flex did not return an image");
+    throw new Error("AimShreem Flex did not return an image");
   }
 
   return responseSchema.parse({

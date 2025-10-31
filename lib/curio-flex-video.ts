@@ -250,12 +250,12 @@ export async function generateVideo({
   const operation: Operation = await initialResponse.json();
 
   if (!initialResponse.ok) {
-    const message = operation.error?.message ?? "Curio Flex Video generation request failed";
+    const message = operation.error?.message ?? "AimShreem Flex Video generation request failed";
     throw new Error(message);
   }
 
   if (!operation.name) {
-    throw new Error("Curio Flex Video generation did not return an operation name");
+    throw new Error("AimShreem Flex Video generation did not return an operation name");
   }
 
   let attempts = 0;
@@ -263,7 +263,7 @@ export async function generateVideo({
 
   while (!currentOperation.done) {
     if (attempts >= maxPollAttempts) {
-      throw new Error("Curio Flex Video generation timed out before completion");
+      throw new Error("AimShreem Flex Video generation timed out before completion");
     }
 
     await wait(pollIntervalMs);
@@ -278,19 +278,19 @@ export async function generateVideo({
     currentOperation = await pollResponse.json();
 
     if (!pollResponse.ok) {
-      const message = currentOperation.error?.message ?? "Curio Flex Video polling failed";
+      const message = currentOperation.error?.message ?? "AimShreem Flex Video polling failed";
       throw new Error(message);
     }
   }
 
   if (currentOperation.error) {
-    throw new Error(currentOperation.error.message ?? "Curio Flex Video generation failed");
+    throw new Error(currentOperation.error.message ?? "AimShreem Flex Video generation failed");
   }
 
   const candidate = searchForVideoCandidate(currentOperation.response);
 
   if (!candidate) {
-    throw new Error("Curio Flex Video generation did not yield a video output");
+    throw new Error("AimShreem Flex Video generation did not yield a video output");
   }
 
   if (candidate.bytes) {
@@ -304,7 +304,7 @@ export async function generateVideo({
     return downloadVideoFromUri(candidate.uri, apiKey, baseUrl, apiVersion);
   }
 
-  throw new Error("Curio Flex Video result could not be parsed");
+  throw new Error("AimShreem Flex Video result could not be parsed");
 }
 
 export type { CurioFlexVideoPayload, GeneratedVideo };

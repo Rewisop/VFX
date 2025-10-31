@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.error("Curio Flex Video generate error", error);
-    return NextResponse.json({ error: "Failed to generate Curio Flex Video" }, { status: 502 });
+    console.error("AimShreem Flex Video generate error", error);
+    return NextResponse.json({ error: "Failed to generate AimShreem Flex Video" }, { status: 502 });
   }
 }

@@ -2,17 +2,18 @@
 
 import { useEffect, useRef } from "react";
 
-type Particle = {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  size: number;
-  life: number;
-  hue: number;
+type Wave = {
+  amplitude: number;
+  wavelength: number;
+  speed: number;
+  offset: number;
+  phase: number;
+  thickness: number;
+  opacity: number;
+  shift: number;
 };
 
-const PARTICLE_COUNT = 140;
+const WAVE_COUNT = 6;
 
 export function Particles({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -25,7 +26,16 @@ export function Particles({ className }: { className?: string }) {
     if (!ctx) return;
 
     let animationFrameId: number;
-    const particles: Particle[] = [];
+    const waves: Wave[] = Array.from({ length: WAVE_COUNT }, (_, index) => ({
+      amplitude: 18 + Math.random() * 16 + index * 4,
+      wavelength: 160 + Math.random() * 140,
+      speed: 0.18 + Math.random() * 0.12 + index * 0.015,
+      offset: (index + 1) / (WAVE_COUNT + 1),
+      phase: Math.random() * Math.PI * 2,
+      thickness: 1.4 + Math.random() * 1.1,
+      opacity: 0.08 + Math.random() * 0.05,
+      shift: Math.random() * 240,
+    }));
 
     let viewWidth = 0;
     let viewHeight = 0;
@@ -42,59 +52,55 @@ export function Particles({ className }: { className?: string }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const spawnParticle = (): Particle => {
-      const hue = 25 + Math.random() * 20;
-      return {
-        x: Math.random() * (viewWidth || 1),
-        y: Math.random() * (viewHeight || 1),
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
-        size: Math.random() * 1.8 + 0.6,
-        life: Math.random() * 200 + 80,
-        hue,
-      };
-    };
-
-    const ensureParticles = () => {
-      while (particles.length < PARTICLE_COUNT) {
-        particles.push(spawnParticle());
-      }
-    };
-
-    const step = () => {
+    const step = (timestamp: number) => {
       ctx.clearRect(0, 0, viewWidth, viewHeight);
+      ctx.fillStyle = "rgba(9, 17, 40, 0.35)";
+      ctx.fillRect(0, 0, viewWidth, viewHeight);
 
-      particles.forEach((particle, index) => {
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-        particle.life -= 1;
-        particle.vx += Math.sin(performance.now() / 1000 + index) * 0.002;
-        particle.vy += Math.cos(performance.now() / 1100 + index) * 0.002;
+      const time = timestamp / 1000;
 
-        if (particle.life <= 0 || particle.x < 0 || particle.y < 0 || particle.x > viewWidth || particle.y > viewHeight) {
-          particles[index] = spawnParticle();
-          return;
+      waves.forEach((wave, index) => {
+        const baseY = viewHeight * wave.offset;
+        const amplitude = wave.amplitude;
+        const wavelength = wave.wavelength;
+        const speed = wave.speed;
+        const oscillation = Math.sin(time * 0.35 + index);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, baseY);
+
+        for (let x = 0; x <= viewWidth + 16; x += 3) {
+          const progress = ((x + wave.shift) / wavelength) * Math.PI * 2;
+          const y = baseY + Math.sin(progress + wave.phase + time * speed * 2) * (amplitude + oscillation * 4);
+          ctx.lineTo(x, y);
         }
 
-        const gradient = ctx.createRadialGradient(
-          particle.x,
-          particle.y,
-          0,
-          particle.x,
-          particle.y,
-          particle.size * 12
-        );
-        gradient.addColorStop(0, `hsla(${particle.hue}, 100%, 65%, 0.9)`);
-        gradient.addColorStop(0.5, `hsla(${particle.hue + 15}, 100%, 55%, 0.35)`);
-        gradient.addColorStop(1, "rgba(10, 10, 30, 0)");
+        const gradient = ctx.createLinearGradient(0, baseY - amplitude - 60, 0, baseY + amplitude + 60);
+        gradient.addColorStop(0, `hsla(${205 + index * 4}, 88%, 72%, ${wave.opacity * 0.7})`);
+        gradient.addColorStop(0.5, `hsla(${200 + index * 3}, 82%, 65%, ${wave.opacity})`);
+        gradient.addColorStop(1, `hsla(${210 + index * 5}, 88%, 72%, ${wave.opacity * 0.7})`);
 
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size * 8, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = wave.thickness + oscillation * 0.35;
+        ctx.shadowColor = `hsla(${202 + index * 4}, 85%, 68%, ${wave.opacity * 1.5})`;
+        ctx.shadowBlur = 14;
+        ctx.stroke();
+        ctx.restore();
       });
 
-      ensureParticles();
+      ctx.save();
+      ctx.globalCompositeOperation = "lighter";
+      ctx.strokeStyle = "rgba(120, 180, 255, 0.08)";
+      ctx.lineWidth = 1;
+      for (let x = 0; x < viewWidth; x += 80) {
+        ctx.beginPath();
+        ctx.moveTo(x + (Math.sin(time * 0.4 + x * 0.005) * 10), 0);
+        ctx.lineTo(x - (Math.cos(time * 0.4 + x * 0.005) * 10), viewHeight);
+        ctx.stroke();
+      }
+      ctx.restore();
+
       animationFrameId = window.requestAnimationFrame(step);
     };
 
@@ -103,7 +109,6 @@ export function Particles({ className }: { className?: string }) {
     };
 
     resize();
-    ensureParticles();
     animationFrameId = window.requestAnimationFrame(step);
     window.addEventListener("resize", handleResize);
 
