@@ -157,24 +157,24 @@ export default function AimShreemFlexVideoPage() {
   }, []);
 
   return (
-    <main className="relative mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-4 pb-20 pt-16">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-[120rem] flex-col gap-12 px-6 pb-24 pt-20 lg:px-12">
       <div className="absolute inset-0 -z-10 opacity-70">
         <Particles className="h-full w-full" />
       </div>
 
       <header className="flex flex-col gap-4 text-center sm:gap-6">
-        <p className="text-sm uppercase tracking-[0.4em] text-orange-200/70">AimShreem Flex Video Story Lab</p>
-        <h1 className="text-4xl font-semibold tracking-tight text-orange-50 sm:text-5xl md:text-6xl">
+        <p className="text-sm uppercase tracking-[0.4em] text-[#9adfff]">AimShreem Flex Video Story Lab</p>
+        <h1 className="text-4xl font-semibold tracking-tight text-[#e0f7ff] sm:text-5xl md:text-6xl">
           Animate your concept
         </h1>
-        <p className="mx-auto max-w-2xl text-lg text-orange-100/80">
+        <p className="mx-auto max-w-3xl text-lg text-[#9adfff]">
           Feed AimShreem Flex Video a reference frame and narrative brief to conjure motion-first concept art, tailored for your
           next shot.
         </p>
       </header>
 
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-        <div className="glow-card flex flex-col gap-6 p-6 sm:p-8">
+      <section className="grid gap-10 lg:grid-cols-[minmax(0,420px)_1fr] xl:grid-cols-[minmax(0,460px)_1fr]">
+        <div className="glow-card flex flex-col gap-6 p-6 sm:p-8 lg:max-w-[420px] lg:w-full xl:max-w-[460px]">
           <div
             onDragOver={(event) => event.preventDefault()}
             onDrop={onDrop}
@@ -190,17 +190,17 @@ export default function AimShreemFlexVideoPage() {
             }}
           >
             <div className="flex flex-col items-center gap-2">
-              <span className="rounded-full bg-orange-500/20 px-3 py-1 text-xs uppercase tracking-[0.3em] text-orange-200">
+              <span className="rounded-full bg-[#00bbff]/10 px-3 py-1 text-xs uppercase tracking-[0.3em] text-[#e0f7ff]">
                 Optional Frame
               </span>
-              <p className="text-base font-semibold text-orange-50">Drag & drop or click to upload</p>
-              <p className="text-sm text-orange-100/60">PNG, JPG up to 5MB</p>
+              <p className="text-base font-semibold text-[#e0f7ff]">Drag & drop or click to upload</p>
+              <p className="text-sm text-[#9adfff]/70">PNG, JPG up to 5MB</p>
               {referenceName ? (
-                <div className="flex flex-col items-center gap-1 text-orange-100/80">
+                <div className="flex flex-col items-center gap-1 text-[#e0f7ff]">
                   <p className="text-sm">Loaded: {referenceName}</p>
                   <button
                     type="button"
-                    className="text-xs uppercase tracking-[0.3em] text-orange-300/80 hover:text-orange-200"
+                    className="text-xs uppercase tracking-[0.3em] text-[#66e1ff] hover:text-[#e0f7ff]"
                     onClick={(event) => {
                       event.stopPropagation();
                       onRemoveReference();
@@ -210,7 +210,7 @@ export default function AimShreemFlexVideoPage() {
                   </button>
                 </div>
               ) : (
-                <p className="text-sm text-orange-100/60">No frame selected</p>
+                <p className="text-sm text-[#9adfff]/70">No frame selected</p>
               )}
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function AimShreemFlexVideoPage() {
           />
 
           <div className="flex flex-col gap-3">
-            <label className="text-sm font-semibold uppercase tracking-[0.25em] text-orange-200">Scene Prompt</label>
+            <label className="text-sm font-semibold uppercase tracking-[0.25em] text-[#66e1ff]">Scene Prompt</label>
             <textarea
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
@@ -233,7 +233,7 @@ export default function AimShreemFlexVideoPage() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <label className="text-sm font-semibold uppercase tracking-[0.25em] text-orange-200">Storyboard Beats (optional)</label>
+            <label className="text-sm font-semibold uppercase tracking-[0.25em] text-[#66e1ff]">Storyboard Beats (optional)</label>
             <textarea
               value={storyboard}
               onChange={(event) => setStoryboard(event.target.value)}
@@ -244,7 +244,7 @@ export default function AimShreemFlexVideoPage() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold uppercase tracking-[0.25em] text-orange-200">Shot Duration</label>
+              <label className="text-xs font-semibold uppercase tracking-[0.25em] text-[#66e1ff]">Shot Duration</label>
               <select
                 value={shotDuration}
                 onChange={(event) => setShotDuration(event.target.value)}
@@ -256,7 +256,7 @@ export default function AimShreemFlexVideoPage() {
               </select>
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold uppercase tracking-[0.25em] text-orange-200">Aspect Ratio</label>
+              <label className="text-xs font-semibold uppercase tracking-[0.25em] text-[#66e1ff]">Aspect Ratio</label>
               <select
                 value={aspectRatio}
                 onChange={(event) => setAspectRatio(event.target.value)}
@@ -271,7 +271,7 @@ export default function AimShreemFlexVideoPage() {
           </div>
 
           {referenceImage && (
-            <p className="text-xs text-orange-200/70">
+            <p className="text-xs text-[#9adfff]">
               Reference-guided runs are locked to 8 seconds and a 16:9 frame on Veo 3.1.
             </p>
           )}
@@ -279,10 +279,10 @@ export default function AimShreemFlexVideoPage() {
           <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-3">
               <span className="status-pill">
-                <span className="inline-flex h-2 w-2 rounded-full bg-orange-300 shadow-neon" />
+                <span className="inline-flex h-2 w-2 rounded-full bg-[#9adfff] shadow-neon" />
                 {statusMessages[status]}
               </span>
-              {error && <span className="text-sm text-orange-200/70">{error}</span>}
+              {error && <span className="text-sm text-[#9adfff]">{error}</span>}
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -305,26 +305,26 @@ export default function AimShreemFlexVideoPage() {
           </div>
         </div>
 
-        <div className="relative overflow-hidden rounded-3xl border border-orange-400/20 bg-gradient-to-br from-slate-950/80 via-slate-900/70 to-slate-950/80 p-6 sm:p-10">
+        <div className="relative overflow-hidden rounded-3xl border border-[#00bbff]/25 bg-gradient-to-br from-[#030028]/80 via-[#05003a]/70 to-[#030028]/80 p-6 sm:p-10">
           <div className="absolute inset-0">
             <Particles className="h-full w-full" />
           </div>
           <div className="relative z-10 flex h-full flex-col gap-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-orange-200/70">AimShreem Flex Video Preview</p>
-                <p className="text-xs uppercase tracking-[0.4em] text-orange-200/50">
+                <p className="text-sm uppercase tracking-[0.3em] text-[#9adfff]">AimShreem Flex Video Preview</p>
+                <p className="text-xs uppercase tracking-[0.4em] text-[#9adfff]/70">
                   {shotDuration}s &bull; {aspectRatio} frame
                 </p>
               </div>
               {status === "running" && (
                 <div className="relative flex items-center justify-center">
-                  <div className="h-16 w-16 animate-spin rounded-full border-4 border-orange-500/40 border-t-orange-400/90"></div>
-                  <div className="absolute h-12 w-12 animate-ping rounded-full bg-gradient-to-r from-orange-500/70 to-orange-300/70 blur-xl"></div>
+                  <div className="h-14 w-14 animate-spin rounded-full border-4 border-[#00bbff]/30 border-t-[#9adfff]"></div>
+                  <div className="absolute h-10 w-10 animate-ping rounded-full bg-gradient-to-r from-[#00bbff]/35 to-[#66e1ff]/35 blur-xl"></div>
                 </div>
               )}
             </div>
-            <div className="relative flex-1 overflow-hidden rounded-3xl border border-orange-200/20 bg-slate-950/60 shadow-neon aspect-video min-h-[360px] sm:min-h-[420px]">
+            <div className="relative w-full overflow-hidden rounded-3xl border border-[#00bbff]/25 bg-[#05003a]/60 shadow-neon aspect-[16/9] min-h-[360px] sm:min-h-[420px]">
               {resultUrl ? (
                 <video
                   key={resultUrl}
@@ -345,25 +345,25 @@ export default function AimShreemFlexVideoPage() {
                   className="object-cover opacity-80"
                 />
               ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center text-orange-100/70">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center text-[#9adfff]">
                   <p className="text-lg font-semibold">Seed AimShreem Flex Video with imagery + narrative</p>
-                  <p className="max-w-xs text-sm text-orange-100/60">
+                  <p className="max-w-xs text-sm text-[#9adfff]/70">
                     Upload a frame or concept art, then map the sequence beats to preview how AimShreem Flex Video might choreograph
                     the shot.
                   </p>
                 </div>
               )}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-orange-400/10" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#00bbff]/10 via-transparent to-[#66e1ff]/10" />
             </div>
-            <div className="rounded-3xl border border-orange-500/10 bg-slate-900/70 p-5 text-sm text-orange-100/70">
-              <p className="font-semibold uppercase tracking-[0.3em] text-orange-200/70">Brief Summary</p>
-              <p className="mt-2 text-orange-100/80">
+            <div className="rounded-3xl border border-[#00bbff]/20 bg-[#05003a]/70 p-5 text-sm text-[#9adfff]">
+              <p className="font-semibold uppercase tracking-[0.3em] text-[#9adfff]">Brief Summary</p>
+              <p className="mt-2 text-[#e0f7ff]">
                 {prompt ? prompt : "Add a prompt to outline the motion you want AimShreem Flex Video to explore."}
               </p>
               {storyboard && (
-                <p className="mt-3 text-xs uppercase tracking-[0.3em] text-orange-200/60">Storyboard Beats</p>
+                <p className="mt-3 text-xs uppercase tracking-[0.3em] text-[#9adfff]/70">Storyboard Beats</p>
               )}
-              {storyboard && <p className="mt-1 text-orange-100/70">{storyboard}</p>}
+              {storyboard && <p className="mt-1 text-[#9adfff]">{storyboard}</p>}
             </div>
           </div>
         </div>

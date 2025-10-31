@@ -17,9 +17,9 @@ const funkyMessages: Record<GenerationStatus, string> = {
 function FunkyLoading() {
   return (
     <div className="relative flex items-center justify-center">
-      <div className="h-16 w-16 animate-spin rounded-full border-4 border-orange-500/40 border-t-orange-400/90"></div>
-      <div className="absolute h-12 w-12 animate-ping rounded-full bg-gradient-to-r from-orange-500/70 to-orange-300/70 blur-xl"></div>
-      <div className="absolute h-24 w-24 animate-pulse rounded-full border border-orange-500/30 blur-sm" />
+      <div className="h-16 w-16 animate-spin rounded-full border-4 border-[#00bbff]/30 border-t-[#9adfff]"></div>
+      <div className="absolute h-12 w-12 animate-ping rounded-full bg-gradient-to-r from-[#00bbff]/40 to-[#66e1ff]/40 blur-xl"></div>
+      <div className="absolute h-24 w-24 animate-pulse rounded-full border border-[#66e1ff]/25 blur-sm" />
     </div>
   );
 }
@@ -141,22 +141,22 @@ export default function Page() {
   }, []);
 
   return (
-    <main className="relative mx-auto flex min-h-screen max-w-6xl flex-col gap-10 px-4 pb-20 pt-16">
+    <main className="relative mx-auto flex min-h-screen w-full max-w-[120rem] flex-col gap-12 px-6 pb-24 pt-20 lg:px-12">
       <div className="absolute inset-0 -z-10 opacity-70">
         <Particles className="h-full w-full" />
       </div>
       <header className="flex flex-col gap-4 text-center sm:gap-6">
-        <p className="text-sm uppercase tracking-[0.4em] text-orange-200/70">AimShreem Flex Image Studio</p>
-        <h1 className="text-4xl font-semibold tracking-tight text-orange-50 sm:text-5xl md:text-6xl">
+        <p className="text-sm uppercase tracking-[0.4em] text-[#9adfff]">AimShreem Flex Image Studio</p>
+        <h1 className="text-4xl font-semibold tracking-tight text-[#e0f7ff] sm:text-5xl md:text-6xl">
           AimShreem Flex
         </h1>
-        <p className="mx-auto max-w-2xl text-lg text-orange-100/80">
+        <p className="mx-auto max-w-3xl text-lg text-[#9adfff]">
           Drop in a reference frame, riff a prompt, and let AimShreem Flex remix it into neon-drenched composites.
         </p>
       </header>
 
-      <section className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-        <div className="glow-card flex flex-col gap-6 p-6 sm:p-8">
+      <section className="grid gap-10 lg:grid-cols-[minmax(0,420px)_1fr] xl:grid-cols-[minmax(0,460px)_1fr]">
+        <div className="glow-card flex flex-col gap-6 p-6 sm:p-8 lg:max-w-[420px] lg:w-full xl:max-w-[460px]">
           <div
             onDragOver={(event) => event.preventDefault()}
             onDrop={onDrop}
@@ -172,15 +172,15 @@ export default function Page() {
             }}
           >
             <div className="flex flex-col items-center gap-2">
-              <span className="rounded-full bg-orange-500/20 px-3 py-1 text-xs uppercase tracking-[0.3em] text-orange-200">
+              <span className="rounded-full bg-[#00bbff]/10 px-3 py-1 text-xs uppercase tracking-[0.3em] text-[#e0f7ff]">
                 Reference
               </span>
-              <p className="text-base font-semibold text-orange-50">Drag & drop or click to upload</p>
-              <p className="text-sm text-orange-100/60">PNG, JPG up to 5MB</p>
+              <p className="text-base font-semibold text-[#e0f7ff]">Drag & drop or click to upload</p>
+              <p className="text-sm text-[#9adfff]/70">PNG, JPG up to 5MB</p>
               {referenceName ? (
-                <p className="text-sm text-orange-100/80">Loaded: {referenceName}</p>
+                <p className="text-sm text-[#e0f7ff]">Loaded: {referenceName}</p>
               ) : (
-                <p className="text-sm text-orange-100/60">No file selected</p>
+                <p className="text-sm text-[#9adfff]/70">No file selected</p>
               )}
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function Page() {
           />
 
           <div className="flex flex-col gap-3">
-            <label className="text-sm font-semibold uppercase tracking-[0.25em] text-orange-200">Prompt</label>
+            <label className="text-sm font-semibold uppercase tracking-[0.25em] text-[#66e1ff]">Prompt</label>
             <textarea
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
@@ -205,10 +205,10 @@ export default function Page() {
           <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-3">
               <span className="status-pill">
-                <span className="inline-flex h-2 w-2 rounded-full bg-orange-300 shadow-neon" />
+                <span className="inline-flex h-2 w-2 rounded-full bg-[#9adfff] shadow-neon" />
                 {funkyMessages[status]}
               </span>
-              {error && <span className="text-sm text-orange-200/70">{error}</span>}
+              {error && <span className="text-sm text-[#9adfff]">{error}</span>}
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -231,16 +231,16 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="relative overflow-hidden rounded-3xl border border-orange-400/20 bg-gradient-to-br from-slate-950/80 via-slate-900/70 to-slate-950/80 p-6 sm:p-10">
+        <div className="relative overflow-hidden rounded-3xl border border-[#00bbff]/25 bg-gradient-to-br from-[#030028]/80 via-[#05003a]/70 to-[#030028]/80 p-6 sm:p-10">
           <div className="absolute inset-0">
             <Particles className="h-full w-full" />
           </div>
           <div className="relative z-10 flex h-full flex-col gap-6">
             <div className="flex items-center justify-between">
-              <p className="text-sm uppercase tracking-[0.3em] text-orange-200/70">Live Preview</p>
+              <p className="text-sm uppercase tracking-[0.3em] text-[#9adfff]">Live Preview</p>
               {status === "running" && <FunkyLoading />}
             </div>
-            <div className="relative flex-1 overflow-hidden rounded-3xl border border-orange-200/20 bg-slate-950/60 shadow-neon aspect-video min-h-[360px] sm:min-h-[420px]">
+            <div className="relative w-full overflow-hidden rounded-3xl border border-[#00bbff]/25 bg-[#05003a]/60 shadow-neon aspect-[16/9] min-h-[360px] sm:min-h-[420px]">
               {resultUrl ? (
                 <NextImage
                   src={resultUrl}
@@ -259,14 +259,14 @@ export default function Page() {
                   className="object-cover opacity-80"
                 />
               ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center text-orange-100/70">
+                <div className="flex h-full w-full flex-col items-center justify-center gap-4 text-center text-[#9adfff]">
                   <p className="text-lg font-semibold">Your VFX masterpiece awaits</p>
-                  <p className="max-w-xs text-sm text-orange-100/60">
+                  <p className="max-w-xs text-sm text-[#9adfff]/70">
                     Upload a reference image and craft a prompt to watch particles swirl it into something new.
                   </p>
                 </div>
               )}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-orange-400/10" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#00bbff]/10 via-transparent to-[#66e1ff]/10" />
             </div>
           </div>
         </div>

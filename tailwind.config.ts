@@ -31,7 +31,7 @@ const config: Config = {
         },
       },
       boxShadow: {
-        neon: "0 0 45px rgba(255, 122, 0, 0.45)",
+        neon: "0 0 45px rgba(0, 187, 255, 0.45)",
       },
     },
   },

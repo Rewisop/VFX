@@ -7,11 +7,11 @@
 }
 
 body {
-  @apply bg-slate-950 text-white;
-  background-image: radial-gradient(circle at top left, rgba(255, 122, 0, 0.2), transparent 60%),
-    radial-gradient(circle at bottom right, rgba(255, 184, 107, 0.25), transparent 55%),
-    linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 15, 35, 0.95));
-  background-blend-mode: screen, screen, normal;
+  @apply bg-[#0d0063] text-[#c8f1ff];
+  background-image: radial-gradient(circle at top left, rgba(0, 187, 255, 0.18), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(0, 119, 255, 0.25), transparent 60%),
+    linear-gradient(150deg, rgba(3, 0, 40, 0.95), rgba(13, 0, 99, 0.92));
+  background-blend-mode: screen, lighten, normal;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -45,15 +45,15 @@ body::after {
 }
 
 .glow-card {
-  @apply relative overflow-hidden rounded-3xl border border-orange-500/20 bg-slate-900/60 shadow-[0_0_60px_rgba(255,122,0,0.3)] backdrop-blur-xl;
+  @apply relative overflow-hidden rounded-3xl border border-[#00bbff]/25 bg-[#05003a]/70 shadow-[0_0_60px_rgba(0,187,255,0.35)] backdrop-blur-xl;
 }
 
 .glow-card::before {
   content: "";
   position: absolute;
   inset: -1px;
-  background: linear-gradient(135deg, rgba(255, 122, 0, 0.6), rgba(255, 184, 107, 0.35));
-  opacity: 0.2;
+  background: linear-gradient(135deg, rgba(0, 187, 255, 0.6), rgba(102, 225, 255, 0.4));
+  opacity: 0.28;
   filter: blur(24px);
   z-index: 0;
 }
@@ -64,21 +64,21 @@ body::after {
 }
 
 .button-primary {
-  @apply flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-300 px-6 py-3 font-semibold text-slate-950 shadow-[0_0_35px_rgba(255,122,0,0.35)] transition hover:scale-105 hover:shadow-[0_0_45px_rgba(255,122,0,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-200 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00bbff] to-[#66e1ff] px-6 py-3 font-semibold text-[#0d0063] shadow-[0_0_35px_rgba(0,187,255,0.4)] transition hover:scale-105 hover:shadow-[0_0_45px_rgba(0,187,255,0.6)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#66e1ff] disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .button-secondary {
-  @apply flex items-center justify-center gap-2 rounded-full border border-orange-300/40 px-5 py-3 font-semibold text-orange-200 transition hover:bg-orange-500/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-200 disabled:cursor-not-allowed disabled:opacity-40;
+  @apply flex items-center justify-center gap-2 rounded-full border border-[#66e1ff]/40 px-5 py-3 font-semibold text-[#66e1ff] transition hover:bg-[#00bbff]/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#66e1ff] disabled:cursor-not-allowed disabled:opacity-40;
 }
 
 .input-field {
-  @apply w-full rounded-2xl border border-white/10 bg-slate-900/60 px-5 py-4 text-base text-orange-50 placeholder:text-orange-200/40 shadow-inner shadow-orange-500/10 focus:border-orange-400/80 focus:outline-none focus:ring-2 focus:ring-orange-400/40;
+  @apply w-full rounded-2xl border border-white/10 bg-[#05003a]/60 px-5 py-4 text-base text-[#e0f7ff] placeholder:text-[#9adfff]/60 shadow-inner shadow-[#00bbff]/10 focus:border-[#66e1ff]/70 focus:outline-none focus:ring-2 focus:ring-[#66e1ff]/40;
 }
 
 .drop-zone {
-  @apply flex h-48 w-full flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-orange-400/60 bg-slate-900/60 text-center text-orange-100/80 transition hover:border-orange-200 hover:bg-slate-900/80;
+  @apply flex h-48 w-full flex-col items-center justify-center gap-3 rounded-3xl border border-dashed border-[#00bbff]/60 bg-[#05003a]/60 text-center text-[#9adfff] transition hover:border-[#66e1ff] hover:bg-[#05003a]/80;
 }
 
 .status-pill {
-  @apply inline-flex items-center gap-2 rounded-full bg-orange-500/20 px-4 py-1 text-sm font-medium text-orange-200;
+  @apply inline-flex items-center gap-2 rounded-full bg-[#00bbff]/10 px-4 py-1 text-sm font-medium text-[#e0f7ff];
 }

@@ -20,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="bg-slate-950">
-      <body className={`${spaceGrotesk.className} min-h-screen antialiased text-white`}>
+    <html lang="en" className="bg-[#0d0063]">
+      <body className={`${spaceGrotesk.className} min-h-screen antialiased`}>
         <SiteNav />
         {children}
       </body>
